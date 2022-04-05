@@ -1,4 +1,4 @@
-const { response } = require('express');
+const { response, request } = require('express');
 const Product = require('./../modelos/productModel');
 
 const createProduct = (request,response) => {
@@ -15,8 +15,33 @@ const createProduct = (request,response) => {
         });
 }
 
+const getAllProducts = (request,response) => {
+    Product.find()
+        .then( allProducts => {
+            return response.status(200).json(allProducts);
+        })
+        .catch( err => {
+            response.statusMessage = "Hubo un error al cargar la lista de docuemtnos."
+            return response.status(404).end();
+        })
+}
+
+const getOneProduct = (request,response) => {
+    const {id} = request.params;
+    Product.findById(id)
+        .then(product => {
+            return response.status(200).json(product);
+        })
+        .catch(err => {
+            console.log(err)
+            return response.status(404).end();
+        })
+}
+
 const ControladorProducts = {
-    createProduct
+    createProduct,
+    getAllProducts,
+    getOneProduct
 }
 
 module.exports = ControladorProducts;
