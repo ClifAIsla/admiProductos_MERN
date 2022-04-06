@@ -38,10 +38,41 @@ const getOneProduct = (request,response) => {
         })
 }
 
+const updateProduct = (request,response) => {
+
+    const {title,price,description} = request.body;
+    const {id} = request.params;
+    const productoActualizar = {title,price,description};
+
+    Product.findByIdAndUpdate(id, {$set: productoActualizar} ,{new:true})
+        .then( product => {
+            return response.status(202).json(product);
+        })
+        .catch( err => {
+            return response.status(404).end();
+        })
+}
+
+const deleteProduct = (request,response) => {
+
+    const {id} = request.params;
+
+    Product.findByIdAndDelete(id)
+        .then(deleteProduct => {
+            return response.status(204).json(deleteProduct);
+        })
+        .catch( err => {
+            return response.status(404).end();
+        })
+
+}
+
 const ControladorProducts = {
     createProduct,
     getAllProducts,
-    getOneProduct
+    getOneProduct,
+    updateProduct,
+    deleteProduct
 }
 
 module.exports = ControladorProducts;
